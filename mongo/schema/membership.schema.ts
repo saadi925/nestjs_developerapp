@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 
 export type MembershipDocument = Membership & Document;
-enum $MemberShipType {
+export enum $MemberShipType {
     BASIC = 'Basic',
     PRO = 'Pro',
     VIP = 'VIP',

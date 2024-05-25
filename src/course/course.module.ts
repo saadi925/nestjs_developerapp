@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Course, CourseSchema } from 'mongo/schema/course/course.schema';
 import { CoursePurchase, CoursePurchaseSchema, Invoice, InvoiceSchema } from 'mongo/schema/purchase';
 import { User, UserSchema } from 'mongo/schema/user.schema';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports :[
@@ -16,6 +17,6 @@ import { User, UserSchema } from 'mongo/schema/user.schema';
     ])
   ],
   controllers: [CourseController],
-  providers: [CourseService],
+  providers: [CourseService, JwtService],
 })
 export class CourseModule {}

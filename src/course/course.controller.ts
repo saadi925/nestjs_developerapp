@@ -1,12 +1,16 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { Roles } from 'src/auth/role/role.decorator';
+import { $UserRole } from 'mongo/schema/user.schema';
+import { JwtAuthGuard } from 'src/jwt/jwt.guard';
 
 @Controller('course')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
-
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @Roles($UserRole.ADMIN)
   async create(@Body() createCourseDto: CreateCourseDto) {
     return await this.courseService.create(createCourseDto);
   }
@@ -34,7 +38,8 @@ export class CourseController {
   async watchLecture(@Param('slug') slug: string, @Param('lectureId') lectureId: string) {
     return await this.courseService.watchLecture(slug, lectureId);
   }
-
+  @UseGuards(JwtAuthGuard)
+  @Roles($UserRole.ADMIN)
   @Get('edit/:slug')
   async findCourseForEdit(@Param('slug') slug : string){
    return await this.courseService.findCourseForEdit(slug)
@@ -44,7 +49,8 @@ export class CourseController {
   async findCourse(@Param('slug') slug: string) {
     return await this.courseService.findCourseBySlug(slug);
   }
-
+  @UseGuards(JwtAuthGuard)
+  @Roles($UserRole.ADMIN)
   @Delete(':slug')
  async remove(@Param('slug') slug: string) {
     return await this.courseService.delete(slug);
