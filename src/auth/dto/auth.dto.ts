@@ -2,14 +2,13 @@ import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 export class SignupDto {
   @IsNotEmpty()
-  name : string
+  name: string;
   @IsEmail()
   @IsNotEmpty()
   email: string;
-  @IsNotEmpty({"message" :"password is required"})
+  @IsNotEmpty({ message: 'password is required' })
   @MinLength(8) // Example: Minimum length of 8 characters
   password: string;
-
 }
 export class SigninDto {
   @IsEmail()

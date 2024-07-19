@@ -2,9 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CourseReviews, CourseReviewsSchema } from './course-review.schema';
 import {
   CourseCategory,
-  CourseCategorySchema,
 } from '../course-categories/course-category.schema';
-import { Document, Types } from 'mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 import { VideoLecture } from '../lecture/lecture.schema';
 import { CourseTags } from './course-tags.schema';
 
@@ -18,17 +17,17 @@ export enum $CourseDifficulty {
 export enum $CourseAccess {
   FREE = 'FREE',
   PAID = 'PAID',
-  TRIAL = 'TRIAL',
 }
 @Schema({ timestamps: true })
 export class Course extends Document {
   @Prop({ type: String, required: true, unique: true })
   title: string;
-
+  @Prop({ type: Number, default : 0})
+  price: number;
   @Prop({ type: String, required: true, unique: true })
   courseId: string;
-  @Prop({ type: CourseCategorySchema, required: true })
-  category: CourseCategory;
+  @Prop({ type: SchemaTypes.ObjectId, ref : CourseCategory.name})
+  category: Types.ObjectId;
   @Prop({ type: String, required: true, unique: true, index: true })
   slug: string;
   @Prop({ type: String, required: false })
@@ -50,7 +49,7 @@ export class Course extends Document {
   
   @Prop({ default: $CourseAccess.FREE, enum: $CourseAccess })
   access: $CourseAccess;
-  @Prop({ type: [CourseReviewsSchema] })
+  @Prop({ type: [CourseReviewsSchema], default : [] })
   reviews?: CourseReviews[];
 }
 

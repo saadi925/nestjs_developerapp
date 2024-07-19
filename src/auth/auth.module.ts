@@ -1,30 +1,34 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { EmailService } from './email-send.service';
-import { JwtService } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'mongo/schema/user.schema';
-import { EmailVerification, EmailVerificationSchema } from 'mongo/schema/email-verification/email-verify.schema';
-import { EmailVerificationService } from './email-verification.service';
+import { Module } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { AuthController } from "./auth.controller";
+import { EmailService } from "./email-send.service";
+import { JwtService } from "@nestjs/jwt";
+import { MongooseModule } from "@nestjs/mongoose";
+import { UserFeatureModel } from "mongo/schema/user.schema";
+import {
+  EmailVerification,
+  EmailVerificationSchema,
+} from "mongo/schema/email-verification/email-verify.schema";
+import { EmailVerificationService } from "./email-verification.service";
+import { GoogleStrategy } from "src/google-auth/google-auth.strategy";
+import { PassportModule } from "@nestjs/passport";
 
 @Module({
   imports: [
+    PassportModule,
     MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
+      UserFeatureModel,
       { name: EmailVerification.name, schema: EmailVerificationSchema },
     ]),
   ],
   controllers: [AuthController],
   providers: [
-    AuthService,
-    EmailService,
-    JwtService,
+    AuthService, 
+    EmailService,GoogleStrategy,
+    JwtService, 
     EmailVerificationService,
+    
   ],
-  exports: [
-    AuthService,
-    EmailVerificationService,
-  ],
+  exports: [AuthService, EmailVerificationService],
 })
 export class AuthModule {}

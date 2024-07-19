@@ -14,10 +14,8 @@ interface JwtPayload {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectModel(User.name) private readonly user: Model<UserDocument> ,
+    @InjectModel(User.name) private readonly user: Model<UserDocument>,
   ) {
-    console.log('running?');
-    
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_SECRET,
@@ -26,16 +24,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload) {
     const { userId } = payload;
-    
-  const user = await this.user.findById(userId).select('-password');
+
+    const user = await this.user.findById(userId).select('-password -coursePurchase -memberShipPurchase -coursePurchase  ');
     if (!user) {
       throw new UnauthorizedException('User not found');
-    }    
+    }
     const now = Date.now() / 1000;
     if (payload.exp && payload.exp < now) {
       throw new UnauthorizedException('Token expired');
     }
-   
+
     return user;
   }
 }

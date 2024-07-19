@@ -27,7 +27,7 @@ async function bootstrap() {
 
   await app.register(compression, {
     brotliOptions: { params: { [constants.BROTLI_PARAM_QUALITY]: 4 } },
-    encodings : ['gzip', 'deflate'],
+    encodings: ['gzip', 'deflate'],
   });
 
   await app.listen(process.env.PORT || 5000);

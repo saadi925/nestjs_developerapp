@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CourseCategoryService } from './course-category.service';
 import { CreateCourseCategoryDto } from './dto/create-course-category.dto';
 import { UpdateCourseCategoryDto } from './dto/update-course-category.dto';
@@ -29,14 +38,20 @@ export class CourseCategoryController {
   }
 
   @Put(':slug')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles($UserRole.ADMIN)
-  async update(@Param('slug') slug: string, @Body() updateCourseCategoryDto: UpdateCourseCategoryDto) {
-    return await this.courseCategoryService.update(slug, updateCourseCategoryDto);
+  async update(
+    @Param('slug') slug: string,
+    @Body() updateCourseCategoryDto: UpdateCourseCategoryDto,
+  ) {
+    return await this.courseCategoryService.update(
+      slug,
+      updateCourseCategoryDto,
+    );
   }
 
   @Delete(':slug')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles($UserRole.ADMIN)
   async remove(@Param('slug') slug: string) {
     return await this.courseCategoryService.remove(slug);

@@ -2,7 +2,10 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from 'mongoose';
 
 export type VideoLectureDocument = VideoLecture & Document;
-
+export enum $LessonAccess {
+  FREE = 'FREE',
+  PAID = 'PAID',
+}
 @Schema({ timestamps: true })
 export class VideoLecture extends Document {
   @Prop({ type: String, required: true })
@@ -20,6 +23,11 @@ export class VideoLecture extends Document {
   @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
   viewedBy: Types.ObjectId[];
 
+  @Prop({
+    default: $LessonAccess.FREE,
+    enum: $LessonAccess,
+  })
+  lessonAccess : $LessonAccess; 
   @Prop({ type: [String], default: [] })
   tags: string[];
 
